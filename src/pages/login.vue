@@ -29,7 +29,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button round color="#626aef" class="w-[250px]" type="primary" @click="onSubmit">登录</el-button>
+          <el-button round color="#626aef" class="w-[250px]" type="primary" @click="onSubmit" :loading="loading">登录</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -40,7 +40,7 @@
 import { ref,reactive } from 'vue';
 import { ElNotification } from 'element-plus';
 import { useRouter } from 'vue-router';
-import {login} from '~/api/manager'
+import { login,getinfo } from '~/api/manager'
 import { useCookies } from '@vueuse/integrations/useCookies';
 
 const router = useRouter();
@@ -69,14 +69,16 @@ const rules ={
 }
 
 const formRef = ref(null)
+const loading = ref(false)
 const onSubmit = () => {
   formRef.value.validate((valid)=>{
      if(!valid){
       return false
      }
+     loading.value = true
      login(form.username,form.password)
      .then(res=>{
-      console.log(res.data.data);
+      console.log(res);
       ElNotification({
         title:'登录成功',
         type:'success',
@@ -84,25 +86,23 @@ const onSubmit = () => {
       })
       //储存token和用户相关信息
       const cookie = useCookies()
-      cookie.set("admin-token",res.data.data.token)
+      cookie.set("admin-token",res.token)
+
+      //获取用户相关信息
+      getinfo().then(res2=>{
+        console.log(res2);
+      })
+
       //跳转后台首页
       router.push("/")
 
      })
-
-
-
-     .catch(err=>{
-      ElNotification({
-        title:'错误',
-        message:err.response.data.msg||"请求失败",
-        type:'error',
-        duration:3000
-      })
-     })
+    .finally(()=>{
+      loading.value = false
+    })
     //console.log("验证通过");
   })
-};
+}
 </script>
 
 
