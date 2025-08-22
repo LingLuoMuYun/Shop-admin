@@ -37,12 +37,10 @@
 </template>
 
 <script setup>
-import { ref,reactive } from 'vue';
+import { ref,reactive,onMounted,onBeforeUnmount } from 'vue';
 import { toast } from '~/composables/util';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { login,getinfo } from '~/api/manager'
-import { setToken }from '~/composables/auth'
 
 const store = useStore()
 const router = useRouter()
@@ -78,29 +76,50 @@ const onSubmit = () => {
       return false
      }
      loading.value = true
-     login(form.username,form.password)
-     .then(res=>{
-      console.log(res);
+
+     store.dispatch("login",form).then(res=>{
       toast("登录成功")
-      //储存token和用户相关信息
-      setToken(res.token)
-
-      //获取用户相关信息
-      getinfo().then(res2=>{
-        store.commit("SET_USERINFO",res2)
-        console.log(res2);
-      })
-
-      //跳转后台首页
       router.push("/")
-
+     }).finally(()=>{
+       loading.value = false
      })
-    .finally(()=>{
-      loading.value = false
-    })
-    //console.log("验证通过");
+
+    //  login(form.username,form.password)
+    //  .then(res=>{
+    //   console.log(res);
+    //   toast("登录成功")
+    //   //储存token和用户相关信息
+    //   setToken(res.token)
+
+
+    //   //跳转后台首页
+    //   router.push("/")
+
+    //  })
+    // .finally(()=>{
+    //   loading.value = false
+    // })
+    // console.log("验证通过");
   })
 }
+
+
+//监听回车事件
+function onKeyUp(e){
+  // console.log(e);
+  if(e.key=="Enter") onSubmit()
+}
+
+//添加键盘监听
+onMounted(()=>{
+  document.addEventListener("keyup",onKeyUp)
+})
+
+//移除键盘监听
+onBeforeUnmount(()=>{
+  document.removeEventListener("keyup",onKeyUp)
+})
+
 </script>
 
 
