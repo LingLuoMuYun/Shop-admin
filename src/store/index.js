@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import { login,getinfo } from '~/api/manager'
-import { setToken } from '~/composables/auth' 
+import { setToken,removeToken } from '~/composables/auth' 
 // 创建一个新的 store 实例
 const store = createStore({
     state () {
@@ -33,6 +33,13 @@ const store = createStore({
             resolve()
           }).catch(err=>reject(err))
         })
+      },
+      //退出登录
+      logout({commit}){
+        //移除cookie里的token
+        removeToken()
+        //清除当前用户状态vuex
+        commit("SET_USERINFO",{})
       }
     }
   })
