@@ -10,10 +10,16 @@ import NotFound from '~/pages/404.vue'
 
 const routes = [{
     path:"/",
-    component:Index
+    component:Index,
+    meta:{
+        title:"后台首页"
+    }
 },{
     path:"/login",
-    component:Login
+    component:Login,
+    meta:{
+        title:"登录页"
+    }
 },{
     path:"/:pathMatch(.*)*",
     name:'NotFound',

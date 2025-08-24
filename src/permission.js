@@ -28,6 +28,11 @@ router.beforeEach(async (to,from,next)=>{
         await store.dispatch("getinfo")
     }
     
+    //设置页面标题
+    let title = (to.meta.title ?to.meta.title :"") + "-商城后台"
+    document.title = title
+    //console.log(to.meta.title)
+
     next()
 })
 
