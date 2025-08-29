@@ -47,7 +47,7 @@ const store = createStore({
             commit("SET_USERINFO",res)
             commit("SET_MENUS",res.menus)
             commit("SET_RULENAMES",res.ruleNames)
-            resolve()
+            resolve(res)
           }).catch(err=>reject(err))
         })
       },
