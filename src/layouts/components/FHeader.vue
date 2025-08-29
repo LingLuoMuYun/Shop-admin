@@ -2,9 +2,12 @@
     <div class="f-header">
         <span class="logo">
             <el-icon class="mr-1"><eleme-filled/></el-icon>
-            泠落
+            泠落 - 后台管理系统
         </span>
-        <el-icon class="icon-btn"><fold/></el-icon>
+        <el-icon class="icon-btn" @click="$store.commit('handleAsideWidth')">
+            <fold v-if="$store.state.asideWidth == '250px'"/>  
+            <Expand v-else/>
+        </el-icon>
         <el-tooltip effect="dark" content="刷新" placement="bottom">      
             <el-icon class="icon-btn" @click="handleRefresh"><refresh/></el-icon>
         </el-tooltip>
