@@ -4,6 +4,7 @@ import { toast,showFullLoading,hideFullLoading } from '~/composables/util'
 import store from "./store"
 
 //全局前置守卫
+let hasGetInfo = false
 router.beforeEach(async (to,from,next)=>{
 
     //显示Loading
@@ -25,8 +26,9 @@ router.beforeEach(async (to,from,next)=>{
 
     //如果用户登录，则自动获取用户信息并存储在vuex当中
     let hasNewRoutes = false
-    if(token){
+    if(token && !hasGetInfo){
         let { menus } = await store.dispatch("getinfo")
+        hasGetInfo = true
         //动态添加路由
         hasNewRoutes = addRoutes(menus)
     }
