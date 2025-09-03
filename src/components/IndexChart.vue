@@ -22,6 +22,7 @@
     import { ref,onMounted,onBeforeUnmount } from 'vue';
     import * as echarts from 'echarts';
     import { useResizeObserver } from '@vueuse/core';
+    import { getStatistics3 } from '~/api/index.js'
 
     const current = ref("week")
     const options = [{
