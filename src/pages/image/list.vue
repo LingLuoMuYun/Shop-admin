@@ -21,5 +21,4 @@ const h= windowHeight - 65 - 44
     border-bottom: 1px solid #eeeeee;
     @apply flex items-center;
 }
-
 </style>
