@@ -10,3 +10,6 @@ export function createImageClass(data){
 export function updateImageClass(id,data){
     return axios.post("/admin/image_class/"+id,data)
 }
+export function deleteImageClass(id){
+    return axios.post(`/admin/image_class/${id}/delete`)
+}
