@@ -2,7 +2,7 @@
   <el-aside width="220px" class="image-aside" v-loading="loading">
     <div class="top">
 
-      <AsideList :active="activeId == item.id" v-for="(item,index) in list" :key="index">
+      <AsideList :active="activeId == item.id" v-for="(item,index) in list" :key="index" @edit="handleEdit(item)">
         {{ item.name }}
       </AsideList>
 
@@ -13,7 +13,7 @@
     </div>
   </el-aside>
 
-  <FormDrawer title="新增" ref="formDrawerRef" @submit="handleSubmit">
+  <FormDrawer :title="drawerTitle" ref="formDrawerRef" @submit="handleSubmit">
     <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="form.name"></el-input>
@@ -31,12 +31,14 @@ import { reactive,ref } from "vue"
 import FormDrawer from "./FormDrawer.vue"
 import {
   getImageClassList,
-  createImageClass
+  createImageClass,
+  updateImageClass
 } from "~/api/image_class.js"
 import AsideList from './AsideList.vue'
 import {
   toast
 } from "~/composables/util.js"
+import { computed } from "@vue/reactivity"
 
 //加载动画
 const loading = ref(false)
@@ -68,9 +70,9 @@ function getData(p=null){
 }
 
 getData()
-
+const editId = ref(0) 
+const drawerTitle = computed(()=>editId.value ? "修改" :"新增")
 const formDrawerRef = ref(null)
-const handleCreate = ()=>formDrawerRef.value.open()
 
 const form = reactive({
   name:"",
@@ -89,16 +91,32 @@ const handleSubmit = ()=>{
   if(!valid) return
 
   formDrawerRef.value.showLoading()
-  createImageClass(form)
-  .then(res=>{
-    toast("新增成功")
-    getData(1)
+  
+  const fun = editId.value ? updateImageClass(editId.value,form) : createImageClass(form)
+  fun.then(res=>{
+    toast(drawerTitle.value + "成功")
+    getData(editId.value ? currentPage.value : 1)
     formDrawerRef.value.close()
   })
   .finally(()=>{
     formDrawerRef.value.hideLoading()
   })
  })
+}
+//新增
+const handleCreate = ()=>{
+  editId.value = 0
+  form.name=""
+  form.order=50
+  formDrawerRef.value.open()
+}
+
+//编辑
+const handleEdit = (row) =>{
+  editId.value = row.id
+  form.name = row.name
+  form.order = row.order
+  formDrawerRef.value.open()
 }
 
 defineExpose({
