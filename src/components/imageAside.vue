@@ -13,7 +13,7 @@
     </div>
   </el-aside>
 
-  <FormDrawer title="新增" ref="formDrawerRef" @shubmit="handleSubmit">
+  <FormDrawer title="新增" ref="formDrawerRef" @submit="handleSubmit">
     <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="form.name"></el-input>
@@ -30,9 +30,13 @@
 import { reactive,ref } from "vue"
 import FormDrawer from "./FormDrawer.vue"
 import {
-  getImageClassList
+  getImageClassList,
+  createImageClass
 } from "~/api/image_class.js"
 import AsideList from './AsideList.vue'
+import {
+  toast
+} from "~/composables/util.js"
 
 //加载动画
 const loading = ref(false)
@@ -51,7 +55,7 @@ function getData(p=null){
   loading.value = true
   getImageClassList(currentPage.value)
   .then(res=>{
-    total.value = res.titalCount
+    total.value = res.totalCount
     list.value = res.list
     let item = list.value[0]
     if(item){
@@ -83,7 +87,17 @@ const formRef = ref(null)
 const handleSubmit = ()=>{
  formRef.value.validate((valid)=>{
   if(!valid) return
-  console.log("提交成功");
+
+  formDrawerRef.value.showLoading()
+  createImageClass(form)
+  .then(res=>{
+    toast("新增成功")
+    getData(1)
+    formDrawerRef.value.close()
+  })
+  .finally(()=>{
+    formDrawerRef.value.hideLoading()
+  })
  })
 }
 
