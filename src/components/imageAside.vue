@@ -2,14 +2,15 @@
   <el-aside width="220px" class="image-aside" v-loading="loading">
     <div class="top">
 
-      <AsideList :active="activeId == item.id" v-for="(item,index) in list" :key="index" @edit="handleEdit(item)" @delete="handleDelete(item.id)">
+      <AsideList :active="activeId == item.id" v-for="(item,index) in list" :key="index" 
+      @edit="handleEdit(item)" @delete="handleDelete(item.id)" @click="handleChangeActiveId(item.id)">
         {{ item.name }}
       </AsideList>
 
     </div>
 
     <div class="bottom">
-      <el-pagination background layout="prev ,next" :total="1000" :current-page="currentPage" :page-size="limit" @current-change="getData" />
+      <el-pagination background layout="prev,next" :total="total" :current-page="currentPage" :page-size="limit" @current-change="getData" />
     </div>
   </el-aside>
 
@@ -44,7 +45,6 @@ import { computed } from "@vue/reactivity"
 //加载动画
 const loading = ref(false)
 const list = ref([])
-const activeId = ref(0)
 
 //分页
 const currentPage = ref(1)
@@ -62,7 +62,7 @@ function getData(p=null){
     list.value = res.list
     let item = list.value[0]
     if(item){
-      activeId.value = item.id
+      handleChangeActiveId(item.id)
     }
   })
   .finally(()=>{
@@ -131,6 +131,15 @@ const handleDelete = (id) =>{
   .finally(()=>{
     loading.value = false
   })
+}
+
+//选中图库id
+const activeId = ref(0)
+const emit = defineEmits(["change"])
+//切换分类
+function handleChangeActiveId(id){
+  activeId.value = id
+  emit("change",id)
 }
 
 defineExpose({
