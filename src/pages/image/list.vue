@@ -16,7 +16,7 @@ import ImageAside from '~/components/ImageAside.vue'
 import ImageMain from '~/components/ImageMain.vue'
 
 const windowHeight = window.innerHeight ||document.body.clientHeight
-const h= windowHeight - 65 - 44
+const h= windowHeight - 148
 
 const ImageAsideRef = ref(null)
 const handleOpenCreate = ()=>ImageAsideRef.value.handleCreate()

@@ -1,7 +1,7 @@
 <template>
   <el-main class="image-main" v-loading="loading">
     <div class="top">
-      <div v-for="(item,index) in list" :key="index">{{ item.u rl }}</div>
+      <div v-for="(item,index) in list" :key="index">{{ item.url }}</div>
     </div>
     <div class="bottom">
       <el-pagination background layout="prev,pager, next" :total="total" :current-page="currentPage" :page-size="limit" @current-change="getData" />
