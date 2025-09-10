@@ -1,7 +1,7 @@
 <template>
     <div class="aside-list" :class="{'active':active}">
         <span class="truncate"><slot/></span>
-        <el-button class="ml-auto px-1" text type="primary" size="small" @click="$emit('edit')">
+        <el-button class="ml-auto px-1" text type="primary" size="small" @click.stop="$emit('edit')">
           <el-icon :size="12"><Edit /></el-icon>
         </el-button>
         <el-popconfirm title="是否删除该分类" confirmButtonText="确认" cancelButtonText="取消" @confirm="$emit('delete')">
