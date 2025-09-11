@@ -30,6 +30,11 @@
       <el-pagination background layout="prev,pager, next" :total="total" :current-page="currentPage" :page-size="limit" @current-change="getData" />
     </div>
   </el-main>
+
+  <el-drawer v-model="drawer" title="上传图片">
+    <UploadFile :data="{image_class_id}" @success="handleUploadSuccess"/>
+  </el-drawer>
+
 </template>
 
 <script setup>
@@ -43,6 +48,11 @@
     showPrompt,
     toast
   } from "~/composables/util.js"
+  import UploadFile from "./UploadFile.vue"
+
+  //上传图片
+  const drawer = ref(false)
+  const openUploadFile = ()=>drawer.value = true
 
   //分页
   const currentPage = ref(1)
@@ -104,9 +114,12 @@
     })
   }
 
+  //上传成功
+  const handleUploadSuccess = ()=>getData(1)
 
   defineExpose({
-    loadData 
+    loadData,
+    openUploadFile
   })
 </script>
 
