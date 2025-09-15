@@ -48,20 +48,24 @@
             </el-table-column>
             <el-table-column label="状态" width="120">
                 <template #default="{row}">
-                    <el-switch :modelValue="row.status" :active-value="1" :inactive-value="0">
+                    <el-switch :modelValue="row.status" :active-value="1" :inactive-value="0" 
+                    :loading="row.statusLoading" @change="handleStatusChange($event,row)" :disabled="row.super==1">
                     </el-switch>
                     
                 </template>
             </el-table-column>
             <el-table-column  label="操作" width="180" align="center">
                 <template #default="scope">
-                    <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
+                    <small v-if="scope.row.super == 1" class="text-sm text-gray-500" >暂无操作</small>
+                    <div v-else>
+                        <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
 
-                    <el-popconfirm title="是否删除该管理员" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(scope.row.id)">
-                        <template #reference>
-                            <el-button  text type="primary" size="small" >删除</el-button>
-                        </template>
-                    </el-popconfirm>
+                        <el-popconfirm title="是否删除该管理员" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(scope.row.id)">
+                            <template #reference>
+                                <el-button  text type="primary" size="small" >删除</el-button>
+                            </template>
+                        </el-popconfirm>
+                    </div>
                 </template>
             </el-table-column>
          </el-table>
@@ -93,7 +97,8 @@ import {
     deleteNotice
 } from "~/api/notice"
 import {
-    getManagerList
+    getManagerList,
+    updateManagerStatus
 } from "~/api/manager"
 import FormDrawer from "~/components/FormDrawer.vue"
 import {
@@ -144,6 +149,19 @@ const handleDelete = (id)=>{
         loading.value = false
     })
 } 
+
+//修改状态
+const handleStatusChange = (status,row)=>{
+    row.statusLoading = true
+    updateManagerStatus(row.id,status)
+    .then(res=>{
+        toast("修改状态成功")
+        row.status = status 
+    })
+    .finally(()=>{
+        row.statusLoading = false
+    })
+}
 //表单部分
 const formDrawerRef = ref(null)
 const formRef = ref(null)
