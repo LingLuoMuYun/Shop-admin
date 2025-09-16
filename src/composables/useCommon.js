@@ -1,6 +1,6 @@
 import { ref, reactive, computed } from "vue";
-import { toast } from "~/composables/util"
-//列表，分页，搜索
+import { toast } from "~/composables/util";
+//列表，分页，搜索，状态，删除
 export function useInitTable(opt = {}) {
   let searchForm = null;
   let resetSearchForm = null;
@@ -43,6 +43,32 @@ export function useInitTable(opt = {}) {
 
   getData();
 
+
+  //删除
+  const handleDelete = (id) => {
+    loading.value = true;
+      opt.delete(id).then((res) => {
+        toast("删除成功");
+        getData();
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  };
+
+  //修改状态
+  const handleStatusChange = (status, row) => {
+    row.statusLoading = true;
+    opt.updateStatus(row.id, status)
+      .then((res) => {
+        toast("修改状态成功");
+        row.status = status;
+      })
+      .finally(() => {
+        row.statusLoading = false;
+      });
+  };
+
   return {
     searchForm,
     resetSearchForm,
@@ -52,17 +78,19 @@ export function useInitTable(opt = {}) {
     total,
     limit,
     getData,
+    handleDelete,
+    handleStatusChange
   };
 }
 
 //新增，修改
-export function useInitForm(opt={}) {
+export function useInitForm(opt = {}) {
   //表单部分
   const formDrawerRef = ref(null);
   const formRef = ref(null);
-  const defaultForm = opt.form
+  const defaultForm = opt.form;
   const form = reactive({});
-  const rules = opt.rules || {}
+  const rules = opt.rules || {};
   const editId = ref(0);
   const drawerTitle = computed(() => (editId.value ? "修改" : "新增"));
   const handleSubmit = () => {
@@ -110,7 +138,7 @@ export function useInitForm(opt={}) {
     formDrawerRef.value.open();
   };
 
-  return{
+  return {
     formDrawerRef,
     formRef,
     form,
@@ -118,6 +146,6 @@ export function useInitForm(opt={}) {
     drawerTitle,
     handleSubmit,
     handleCreate,
-    handleEdit
-  }
+    handleEdit,
+  };
 }
