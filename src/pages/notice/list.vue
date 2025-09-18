@@ -31,7 +31,6 @@
                     <el-input v-model="form.content" placeholder="公告内容" type="textarea" :row="5"></el-input>
                 </el-form-item>
             </el-form>
-            
          </FormDrawer>
 
     </el-card>  
