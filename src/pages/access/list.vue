@@ -14,10 +14,14 @@
                     <span>{{ data.name }}</span>
 
                     <div class="ml-auto">
-                        <el-switch :modelValue="data.status" :active-value="1" :inactive-value="0" />
+                        <el-switch :modelValue="data.status" :active-value="1" :inactive-value="0" @change="handleStatusChange($event,data)"/>
                             <el-button text type="primary" size="small" @click.stop="handleEdit(data)">修改</el-button>
-                            <el-button text type="primary" size="small">增加</el-button>
-                            <el-button text type="primary" size="small">删除</el-button>
+                            <el-button text type="primary" size="small" @click.stop="addChild(data.id)">增加</el-button>
+                            <el-popconfirm title="是否要删除该记录" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(data.id)">
+                                <template #reference>
+                                    <el-button text type="primary" size="small">删除</el-button>
+                                </template>
+                            </el-popconfirm>
                         
                     </div>
                 </div>
@@ -72,7 +76,9 @@ import IconSelect from "~/components/IconSelect.vue"
 import {
     getRuleList,
     createRule,
-    updateRule
+    updateRule,
+    updateRuleStatus,
+    deleteRule
 } from "~/api/rule.js"
 import {
     useInitTable,
@@ -84,14 +90,18 @@ const defaultExpandedKeys = ref([])
 const {
     loading,
     tableData,
-    getData
+    getData,
+    handleDelete,
+    handleStatusChange
 } = useInitTable({
     getList:getRuleList,
     onGetListSuccess:(res)=>{
         options.value = res.rules
         tableData.value = res.list
         defaultExpandedKeys.value = res.list.map(o=>o.id)
-    }
+    },
+    delete:deleteRule,
+    updateStatus:updateRuleStatus
 })
 
 const {
@@ -132,6 +142,12 @@ const {
     create:createRule
 })
 
+//添加子分类
+const addChild = (id)=>{
+    handleCreate( )
+    form.rule_id = id
+    form.status = 1
+}
 </script>
 
 <style>
