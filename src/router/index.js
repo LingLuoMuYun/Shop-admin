@@ -20,7 +20,7 @@ import CouponList from '~/pages/coupon/list.vue'
 import ManagerList from '~/pages/manager/list.vue'
 import AccessList from '~/pages/access/list.vue'
 import RoleList from '~/pages/role/list.vue'
-
+import SkusList from '~/pages/skus/list.vue'
 // const routes = [ {
 //     path:"/",
 //     component:Admin,
@@ -168,6 +168,13 @@ const asyncRoutes =[{
         component:RoleList,
         meta:{
             title:"角色管理"
+        }
+    },{
+        path:"/skus/list",
+        name:"/skus/list",
+        component:SkusList,
+        meta:{
+            title:"商品规格管理"
         }
     }]
 

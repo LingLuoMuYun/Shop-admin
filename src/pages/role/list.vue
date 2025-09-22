@@ -35,7 +35,7 @@
                     <el-input v-model="form.name" placeholder="角色名称"></el-input>
                 </el-form-item>
                 <el-form-item label="角色描述" prop="desc">
-                    <el-input v-model="form.desc" placeholder="角色描述" type="textarea" :row="5"></el-input>
+                    <el-input v-model="form.desc" placeholder="角色描述" type="textarea" :rows="5"></el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-switch v-model="form.status" :active-value="1" :inactive-value="0">
@@ -45,8 +45,8 @@
          </FormDrawer>
 
          <!-- 权限配置 -->
-         <FormDrawer ref="setRuleformDrawerRef" title="权限配置" @submit="handleSetRuleSubmit">
-            <el-tree-v2 ref="elTreeRef" node-key="id" :default-expanded-keys="defaultExpandedKeys" :check-strictly="checkStrictly"
+         <FormDrawer ref="setRuleFormDrawerRef" title="权限配置" @submit="handleSetRuleSubmit">
+            <el-tree-v2 ref="elTreeRef" node-key="id" :check-strictly="checkStrictly" :default-expanded-keys="defaultExpandedKeys" 
             :data="ruleList" :props="{label:'name',children:'child'}" show-checkbox :height="treeHeight"
             @check="handleTreeCheck">
                 <template #default="{ node,data }">
@@ -120,7 +120,7 @@ const {
     create:createRole
 })
 
-const setRuleformDrawerRef = ref(null)
+const setRuleFormDrawerRef = ref(null)
 const ruleList = ref([])
 const treeHeight = ref(0)
 const roleId = ref(0)
@@ -138,7 +138,7 @@ const openSetRule = (row)=>{
     getRuleList(1).then(res=>{
         ruleList.value = res.list
         defaultExpandedKeys.value = res.list.map(o=>o.id)
-        setRuleformDrawerRef.value.open()
+        setRuleFormDrawerRef.value.open()
 
         //获取当前角色拥有的权限id
         ruleIds.value = row.rules.map(o=>o.id)
@@ -149,19 +149,19 @@ const openSetRule = (row)=>{
     })
 }
 const handleSetRuleSubmit = ()=>{
-    setRuleformDrawerRef.value.showLoading()
+    setRuleFormDrawerRef.value.showLoading()
     setRoleRules(roleId.value,ruleIds.value)
     .then(res=>{
         toast("配置成功")
         getData()
-        setRuleformDrawerRef.value.close()
+        setRuleFormDrawerRef.value.close()
     })
     .finally(()=>{
-        setRuleformDrawerRef.value.hideLoading()
+        setRuleFormDrawerRef.value.hideLoading()
     })
 }
 
-const handleTreeCheck =(...e)=>{
+const handleTreeCheck = (...e)=>{
     const { checkedKeys,halfCheckedKeys } = e[1]
     ruleIds.value = [...checkedKeys,...halfCheckedKeys]
 }
