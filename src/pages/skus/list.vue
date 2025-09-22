@@ -62,13 +62,9 @@ import {
     deleteSkus,
     updateSkusStatus
 } from "~/api/skus"
-import { ref } from "vue"
 import ListHeader from "~/components/ListHeader.vue"
 import FormDrawer from "~/components/FormDrawer.vue"
 import TagInput from "~/components/TagInput.vue"
-import {
-    toast
-} from "~/composables/util"
 import { useInitTable,useInitForm } from "~/composables/useCommon"
 
 
@@ -80,7 +76,10 @@ const {
     limit,
     getData,
     handleDelete,
-    handleStatusChange
+    handleStatusChange,
+    handleSelectionChange,
+    multipleTableRef,
+    handleMultiDelete
 } = useInitTable({
     getList:getSkusList,
     delete:deleteSkus,
@@ -120,27 +119,5 @@ const {
     create:createSkus
 }) 
  
-//多选选中ID
-const multiSelectionIds = ref([])
-const handleSelectionChange = (e)=>{
-    multiSelectionIds.value = e.map(o=>o.id)
-}
 
-//批量删除
-const multipleTableRef = ref(null)
-const handleMultiDelete = ()=>{
-    loading.value = true
-    deleteSkus(multiSelectionIds.value)
-    .then(res=>{
-        toast("删除成功")
-        //清空选中
-        if(multipleTableRef.value){
-            multipleTableRef.value.clearSelection()
-        }
-        getData()
-    })
-    .finally(()=>{
-        loading.value = false
-    })
-}
 </script>
