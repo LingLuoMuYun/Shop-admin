@@ -29,7 +29,7 @@
             <el-pagination background layout="prev,pager,next" :total="total" :current-page="currentPage" :page-size="limit" @current-change="getData" />
          </div>
          
-         <FormDrawer ref="formDrawerRef" :title="drawerTitle" @submit="handleSubmit">
+         <FormDrawer destroyOnClose ref="formDrawerRef" :title="drawerTitle" @submit="handleSubmit">
             <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
                 <el-form-item label="规格名称" prop="name">
                     <el-input v-model="form.name" placeholder="规格名称"></el-input>
@@ -42,7 +42,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="规格值" prop="default">
-                    <el-input v-model="form.default" placeholder="规格值" type="textarea"></el-input>
+                    <TagInput  v-model="form.default"/>
                 </el-form-item>
             </el-form>
          </FormDrawer>
@@ -62,6 +62,7 @@ import {
 import { ref } from "vue"
 import ListHeader from "~/components/ListHeader.vue"
 import FormDrawer from "~/components/FormDrawer.vue"
+import TagInput from "~/components/TagInput.vue"
 import {
     toast
 } from "~/composables/util"
