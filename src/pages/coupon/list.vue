@@ -23,13 +23,23 @@
             <el-table-column prop="used" label="已使用" />
             <el-table-column  label="操作" width="180" align="center">
                 <template #default="scope">
-                    <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
+                    <el-button v-if="scope.row.statusText =='未开始' " type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
 
-                    <el-popconfirm title="是否删除该公告" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(scope.row.id)">
+                    <el-popconfirm v-if="scope.row.statusText !='领取中' " title="是否删除该优惠券" 
+                    confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(scope.row.id)">
                         <template #reference>
                             <el-button  text type="primary" size="small" >删除</el-button>
                         </template>
                     </el-popconfirm>
+
+                    <el-popconfirm v-if="scope.row.statusText =='领取中'" title="是否让该优惠券失效" 
+                    onfirmButtonText="失效" cancelButtonText="取消" @confirm="handleStatusChange(0,scope.row)">
+                        <template #reference>
+                            <el-button type="danger" size="small" >失效</el-button>
+                        </template>
+                    </el-popconfirm>
+
+
                 </template>
             </el-table-column>
          </el-table>
@@ -87,7 +97,7 @@ import {
     createCoupon,
     updateCoupon,
     deleteCoupon,
-    // updateCouponStatus
+    updateCouponStatus
 } from "~/api/coupon"
 import ListHeader from "~/components/ListHeader.vue"
 import FormDrawer from "~/components/FormDrawer.vue"
@@ -115,7 +125,8 @@ const {
     total,
     limit,
     getData,
-    handleDelete
+    handleDelete,
+    handleStatusChange
 } = useInitTable({
     getList:getCouponList,
     onGetListSuccess:(res)=>{
@@ -126,7 +137,8 @@ const {
         })
         total.value = res.totalCount
     },
-    delete:deleteCoupon
+    delete:deleteCoupon,
+    updateStatus:updateCouponStatus
 })
 
 const {
