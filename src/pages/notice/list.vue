@@ -57,7 +57,7 @@ const {
     handleDelete
 } = useInitTable({
     getList:getNoticeList,
-    delte:deleteNotice
+    delete:deleteNotice
 })
 
 const {
