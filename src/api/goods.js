@@ -26,3 +26,7 @@ export function deleteGoods(ids){
         ids
     })
 }
+
+export function createGoodsSkusCard(data){
+    return axios.post(`/admin/goods_skus_card`,data)
+}
