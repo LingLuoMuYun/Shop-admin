@@ -49,7 +49,7 @@
                        <el-tag :type="row.status ? 'success' : 'danger'" size="small">{{ row.status ? '上架' : '仓库' }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="审核状态" width="120" align="center">
+                <el-table-column label="审核状态" width="120" align="center" v-if="searchForm.tab != 'delete'" >
                     <template #default="{row}">
                         <div class="flex flex-col" v-if="row.ischeck == 0">
                             <el-button type="success" size="small" plain>审核通过</el-button>
@@ -61,7 +61,7 @@
                 <el-table-column label="总库存" width="90" prop="stock" align="center" />
                 <el-table-column  label="操作"  align="center">
                     <template #default="scope">
-                        <div >
+                        <div v-if="searchForm.tab != 'delete'">
                             <el-button class="px-1" type="primary" size="small" text>修改</el-button>
                             <el-button class="px-1" type="primary" size="small" text>商品规格</el-button>
                             <el-button class="px-1" type="primary" size="small" text>设置轮播图</el-button>
@@ -72,6 +72,7 @@
                                 </template>
                             </el-popconfirm>
                         </div>
+                        <span v-else>暂无操作</span>
                     </template>
                 </el-table-column>
             </el-table>
