@@ -21,6 +21,7 @@
           <el-button type="danger" size="small">批量删除</el-button>
         </template>
       </el-popconfirm>
+      <slot/>
     </div>
 
     <el-tooltip

@@ -31,7 +31,6 @@
          <div class="flex items-center justify-center mt-5">
             <el-pagination background layout="prev,pager,next" :total="total" :current-page="currentPage" :page-size="limit" @current-change="getData" />
          </div>
-         
          <FormDrawer destroyOnClose ref="formDrawerRef" :title="drawerTitle" @submit="handleSubmit">
             <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
                 <el-form-item label="规格名称" prop="name">
@@ -49,8 +48,6 @@
                 </el-form-item>
             </el-form>
          </FormDrawer>
-
-
     </el-card>  
 </template>
 

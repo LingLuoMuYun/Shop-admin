@@ -27,11 +27,14 @@
                             </el-select>
                     </SearchItem>
                 </template>
-            </Search>
+            </Search> 
             <!-- 新增，刷新 -->
-            <ListHeader @create="handleCreate" @refresh="getData"/>
-
-            <el-table :data="tableData" stripe style="width:100%" v-loading="loading">
+            <ListHeader layout="create,delete,refresh" @create="handleCreate" @refresh="getData" @delete="handleMultiDelete">
+                <el-button size="small" @click="handleMultiStatusChange(1)" v-if="searchForm.tab=='all'||searchForm.tab=='off'">上架</el-button>   
+                <el-button size="small" @click="handleMultiStatusChange(0)" v-if="searchForm.tab == 'all'||searchForm.tab=='saling'">下架</el-button>    
+            </ListHeader>
+            <el-table ref="multipleTableRef" @selection-change="handleSelectionChange" :data="tableData" stripe style="width:100%" v-loading="loading">
+                <el-table-column type="selection" width="55"/>
                 <el-table-column label="商品" width="300">
                     <template #default="{row}">
                         <div class="flex">
@@ -170,6 +173,9 @@ import SearchItem from "~/components/SearchItem.vue"
 
 
 const {
+    handleSelectionChange,
+    multipleTableRef,
+    handleMultiDelete,
     searchForm,
     resetSearchForm,
     tableData,
@@ -179,7 +185,7 @@ const {
     limit,
     getData,
     handleDelete,
-    handleStatusChange
+    handleMultiStatusChange
 } = useInitTable({
     searchForm:{
         title:"",
