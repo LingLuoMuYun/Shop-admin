@@ -73,7 +73,8 @@
                         <div v-if="searchForm.tab != 'delete'" >
                             <el-button class="px-1" type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
                             <el-button class="px-1" type="primary" size="small" text>商品规格</el-button>
-                            <el-button class="px-1" type="primary" size="small" text>设置轮播图</el-button>
+                            <el-button class="px-1" :type="scope.row.goods_banner.length == 0 ? 'danger' :'primary'" size="small" text 
+                            @click="handleSetGoodsBanners(scope.row)" :loading="scope.row.bannersLoading">设置轮播图</el-button>
                             <el-button class="px-1" type="primary" size="small" text>商品详情</el-button>
                             <el-popconfirm title="是否删除该商品" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(scope.row.id)">
                                 <template #reference>
@@ -149,6 +150,8 @@
             </FormDrawer>
 
         </el-card>
+
+        <banners ref="bannersRef" @reloadData="getData"/>
     </div>  
 </template>
  
@@ -170,7 +173,7 @@ import {
 } from "~/api/category"
 import Search from "~/components/Search.vue"
 import SearchItem from "~/components/SearchItem.vue"
-
+import banners from "./banners.vue"
 
 const {
     handleSelectionChange,
@@ -195,7 +198,7 @@ const {
     getList:getGoodsList,
     onGetListSuccess:(res)=>{
         tableData.value = res.list.map((o) => {
-            o.statusLoading = false;
+            o.bannersLoading = false;
             return o;
         });
         total.value = res.totalCount;
@@ -257,4 +260,9 @@ const tabbars = [{
 const category_list = ref([])
 getCategoryList().then(res=>category_list.value = res)
 
+//设置轮播图
+const bannersRef = ref(null)
+const handleSetGoodsBanners = (row)=>{
+    bannersRef.value.open(row)
+}
 </script>
