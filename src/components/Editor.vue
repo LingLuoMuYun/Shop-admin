@@ -1,6 +1,5 @@
 <template>
   <editor v-model="content" tag-name="div" :init="init" />
-  <ChooseImage :preview="false" ref="ChooseImageRef" :limit="9" />
 </template>
 <script setup>
 import tinymce from "tinymce/tinymce";
@@ -23,7 +22,7 @@ import "tinymce/plugins/codesample"; // 插入代码
 import "tinymce/plugins/directionality";
 import "tinymce/plugins/emoticons";
 import "tinymce/plugins/fullscreen"; //全屏
-import "tinymce/plugins/help";
+// import "tinymce/plugins/help";
 import "tinymce/plugins/image"; // 插入上传图片插件
 import "tinymce/plugins/importcss"; //图片工具
 import "tinymce/plugins/insertdatetime"; //时间插入
@@ -60,9 +59,9 @@ const init = {
   // height: 320,
   toolbar_mode: "none",
   plugins:
-    "wordcount visualchars visualblocks template searchreplace save quickbars preview pagebreak nonbreaking media insertdatetime importcss image help fullscreen directionality codesample code charmap link code table lists advlist anchor autolink autoresize autosave",
+    "wordcount visualchars visualblocks template searchreplace save quickbars preview pagebreak nonbreaking media insertdatetime importcss image  fullscreen directionality codesample code charmap link code table lists advlist anchor autolink autoresize autosave",
   toolbar:
-    "formats undo redo fontsizeselect fontselect ltr rtl searchreplace media imageUpload | outdent indent aligncenter alignleft alignright alignjustify lineheight underline quicklink h2 h3 blockquote numlist bullist table removeformat forecolor backcolor bold italic strikethrough hr link preview fullscreen help ",
+    "formats undo redo fontsizeselect fontselect ltr rtl searchreplace media imageUpload | outdent indent aligncenter alignleft alignright alignjustify lineheight underline quicklink h2 h3 blockquote numlist bullist table removeformat forecolor backcolor bold italic strikethrough hr link preview fullscreen  ",
   content_style: "p {margin: 5px 0; font-size: 14px}",
   fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",
   font_formats:
