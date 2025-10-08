@@ -35,7 +35,7 @@
                 </el-form-item>
             </template>
             <template v-else>
-                多规格
+                <SkuCard />
             </template>
         </el-form>
     </FormDrawer>
@@ -49,6 +49,11 @@ import {
     updateGoodsSkus
 } from "~/api/goods"
 import { toast } from "~/composables/util"
+import SkuCard from "./components/SkuCard.vue"
+import {
+    goodsId,
+    initSkuCardList
+} from "~/composables/useSku.js"
 
 const formDrawerRef = ref(false)
 
@@ -63,7 +68,6 @@ const form = reactive({
     }
 })
 
-const goodsId = ref(0)
 const open = (row)=>{
     goodsId.value = row.id
     row.skusLoading = true
@@ -76,6 +80,7 @@ const open = (row)=>{
             "weight":0,
             "volume":0
         }
+        initSkuCardList(res)
         formDrawerRef.value.open()
     })
     .finally(()=>{
