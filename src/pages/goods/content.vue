@@ -33,7 +33,7 @@ const open = (row)=>{
         formDrawerRef.value.open()
     })
     .finally(()=>{
-        row.bannersLoading = false
+        row.contentLoading = false
     })
 }
 
