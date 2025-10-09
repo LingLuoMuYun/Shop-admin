@@ -28,11 +28,6 @@ export function deleteGoods(ids){
     })
 }
 
-
-export function createGoodsSkusCard(data){
-    return axios.post(`/admin/goods_skus_card`,data)
-}
-
 export function readGoods(id){
     return axios.get(`/admin/goods/read/${id}`)
 }
@@ -45,3 +40,8 @@ export function setGoodsBanner(id,data){
 export function updateGoodsSkus(id,data){
     return axios.post(`/admin/goods/updateskus/${id}`,data)
 }
+
+export function createGoodsSkusCard(data){
+    return axios.post(`/admin/goods_skus_card`,data)
+}
+
