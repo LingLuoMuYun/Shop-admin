@@ -10,7 +10,12 @@
                 </el-input>
                 <el-button class="ml-auto" size="small"><el-icon> <Top/> </el-icon></el-button>
                 <el-button size="small"><el-icon> <Bottom/> </el-icon></el-button>
-                <el-button size="small"><el-icon> <Delete/> </el-icon></el-button>
+
+                <el-popconfirm title="是否删除该选项" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(item)">
+                    <template #reference>
+                        <el-button size="small"><el-icon> <Delete/> </el-icon></el-button>
+                    </template>
+                </el-popconfirm>
             </div>
             </template>
             <SkuCardItem :skuCardId="item.id"/>
@@ -26,7 +31,8 @@ import {
     sku_card_list,
     addSkuCardEvent,
     btnLoading,
-    handleUpdate
+    handleUpdate,
+    handleDelete
 } from "~/composables/useSku.js"
 </script>
 
