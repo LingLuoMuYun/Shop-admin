@@ -53,3 +53,17 @@ export function showFullLoading(){
 export function hideFullLoading(){
   nprogress.done()
 }
+
+//上移
+export function useArrayMoveUp(arr,index){
+  swapArray(arr,index,index - 1)
+}
+//下移
+export function useArrayMoveDown(arr,index){
+  swapArray(arr,index,index + 1)
+}
+
+function swapArray(arr,index1,index2){
+  arr[index1] = arr.splice(index2,1,arr[index1])[0]
+  return arr
+}
