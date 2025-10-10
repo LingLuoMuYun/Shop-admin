@@ -1,5 +1,5 @@
 <template>
-    <div class="flex gap-2">
+    <div class="flex gap-2" v-loading="loading">
     <el-tag
       v-for="(tag,index) in item.goodsSkusCardValue"
       :key="index"
@@ -20,7 +20,7 @@
       @blur="handleInputConfirm"
     />
     <el-button v-else class="button-new-tag" size="small" @click="showInput">
-      + New Tag
+      + 添加选项值
     </el-button>
   </div>
 
@@ -42,7 +42,8 @@ const {
     InputRef,
     handleClose,
     showInput,
-    handleInputConfirm
+    handleInputConfirm,
+    loading
 } = initSkusCardItem(props.skuCardId)
 
 </script>
