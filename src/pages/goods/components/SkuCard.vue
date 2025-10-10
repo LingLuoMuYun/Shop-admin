@@ -1,5 +1,5 @@
 <template>
-    <el-form-item label="规格选项" >
+    <el-form-item label="规格选项" v-loading="bodyLoading">
         <el-card shadow="never" class="w-full mb-3" v-for="(item,index) in sku_card_list" :key="item.id" v-loading="item.loading">
             <template #header>
             <div class="flex items-center">
@@ -33,7 +33,8 @@ import {
     btnLoading,
     handleUpdate,
     handleDelete,
-    sortCard
+    sortCard,
+    bodyLoading 
 } from "~/composables/useSku.js"
 </script>
 
