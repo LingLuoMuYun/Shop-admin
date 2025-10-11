@@ -4,7 +4,8 @@ import {
   updateGoodsSkusCard,
   deleteGoodsSkusCard,
   sortGoodsSkusCard,
-  createGoodsSkusCardValue
+  createGoodsSkusCardValue,
+  updateGoodsSkusCardValue
 } from "~/api/goods.js";
 import { useArrayMoveUp, useArrayMoveDown } from "~/composables/util";
 
@@ -154,6 +155,25 @@ export function initSkusCardItem(id) {
     })
   };
 
+  const handleChange = (value,tag)=>{
+    loading.value = true
+    updateGoodsSkusCardValue(tag.id,{
+      "goods_skus_card_id":id,
+      "name":item.name,
+      "order":tag.order,
+      "value":value
+    })
+    .then(res=>{
+      tag.value = value
+    })
+    .catch(err=>{
+      tag.text = tag.value
+    })
+    .finally(()=>{
+      loading.value = false
+    })
+  }
+
   return {
     item,
     inputValue,
@@ -162,6 +182,7 @@ export function initSkusCardItem(id) {
     handleClose,
     showInput,
     handleInputConfirm,
-    loading
+    loading,
+    handleChange
   };
 }
