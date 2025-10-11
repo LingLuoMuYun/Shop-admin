@@ -5,7 +5,8 @@ import {
   deleteGoodsSkusCard,
   sortGoodsSkusCard,
   createGoodsSkusCardValue,
-  updateGoodsSkusCardValue
+  updateGoodsSkusCardValue,
+  deleteGoodsSkusCardValue 
 } from "~/api/goods.js";
 import { useArrayMoveUp, useArrayMoveDown } from "~/composables/util";
 
@@ -112,14 +113,24 @@ export function sortCard(action, index) {
 
 //初始化规格值
 export function initSkusCardItem(id) {
+  const loading = ref(false)
   const item = sku_card_list.value.find((o) => o.id == id);
   const inputValue = ref("");
-  const dynamicTags = ref(["Tag 1", "Tag 2", "Tag 3"]);
   const inputVisible = ref(false);
   const InputRef = ref();
 
   const handleClose = (tag) => {
-    dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1);
+    loading.value = true
+    deleteGoodsSkusCardValue(tag.id)
+    .then(res=>{
+      let i = item.goodsSkusCardValue.findIndex(o=>o.id === tag.id)
+      if(i!= -1){
+        item.goodsSkusCardValue.splice(i,1)
+      }
+    })
+    .finally(()=>{
+      loading.value = false
+    })
   };
 
   const showInput = () => {
@@ -129,7 +140,6 @@ export function initSkusCardItem(id) {
     });
   };
 
-  const loading = ref(false)
   const handleInputConfirm = () => {
     if(!inputValue.value){
         inputVisible.value = false;
