@@ -8,7 +8,7 @@
                         <el-icon class="cursor-pointer" @click="handleChooseSku(item)"> <more/> </el-icon>
                     </template>
                 </el-input>
-                <el-button class="ml-auto" size="small" @clcik="sortCard('up',index)" :disabled="index == 0"><el-icon> <Top/> </el-icon></el-button>
+                <el-button class="ml-auto" size="small" @click="sortCard('up',index)" :disabled="index == 0"><el-icon> <Top/> </el-icon></el-button>
                 <el-button size="small" @click="sortCard('down',index)" :disabled="index == sku_card_list.length-1"><el-icon> <Bottom/> </el-icon></el-button>
 
                 <el-popconfirm title="是否删除该选项" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(item)">

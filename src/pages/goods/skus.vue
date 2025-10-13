@@ -54,7 +54,8 @@ import SkuCard from "./components/SkuCard.vue"
 import SkuTable from "./components/SkuTable.vue"
 import {
     goodsId,
-    initSkuCardList
+    initSkuCardList,
+    sku_list
 } from "~/composables/useSku.js"
 
 const formDrawerRef = ref(false)
@@ -93,7 +94,14 @@ const open = (row)=>{
 const emit = defineEmits(["reloadData"])
 const submit = ()=>{
     formDrawerRef.value.showLoading()
-    updateGoodsSkus(goodsId.value,form)
+    let data = {
+        sku_type:form.sku_type,
+        sku_value:form.sku_value,
+    }
+    if(form.sku_type == 1){
+        data.goodsSkus = sku_list.value
+    }
+    updateGoodsSkus(goodsId.value,data)
     .then(res=>{
         toast("设置商品规格成功")
         formDrawerRef.value.close()

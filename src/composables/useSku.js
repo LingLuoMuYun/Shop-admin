@@ -9,7 +9,11 @@ import {
   deleteGoodsSkusCardValue,
   chooseAndSetGoodsSkusCard
 } from "~/api/goods.js";
-import { useArrayMoveUp, useArrayMoveDown } from "~/composables/util";
+import { 
+  useArrayMoveUp,
+  useArrayMoveDown,
+  cartesianProductOf
+} from "~/composables/util";
 
 //当前商品id
 export const goodsId = ref(0);
@@ -109,6 +113,7 @@ export function sortCard(action, index) {
   })
     .then((res) => {
       func(sku_card_list.value, index);
+      getTableData()
     })
     .finally((res) => {
       bodyLoading.value = false;
@@ -126,6 +131,7 @@ export function handleChooseSetGoodsSkusCard(id,data){
       o.text = o.value || "属性值"
       return o
     })
+    getTableData()
   })
   .finally(()=>{
     item.loading = false
@@ -148,6 +154,7 @@ export function initSkusCardItem(id) {
       if(i!= -1){
         item.goodsSkusCardValue.splice(i,1)
       }
+      getTableData()
     })
     .finally(()=>{
       loading.value = false
@@ -166,7 +173,6 @@ export function initSkusCardItem(id) {
         inputVisible.value = false;
         return 
     }
-
     loading.value = true
     createGoodsSkusCardValue({
         goods_skus_card_id:id,
@@ -178,6 +184,7 @@ export function initSkusCardItem(id) {
             ...res,
             text:res.value
         })
+        getTableData()
     })
     .finally(()=>{
         inputVisible.value = false;
@@ -196,6 +203,7 @@ export function initSkusCardItem(id) {
     })
     .then(res=>{
       tag.value = value
+      getTableData()
     })
     .catch(err=>{
       tag.text = tag.value
@@ -266,4 +274,59 @@ export function initSkuTable(){
     tableThs,
     sku_list
   }
+}
+
+//获取规格表格数据
+function getTableData(){
+  setTimeout(() => {
+    if(sku_card_list.value.length === 0) return []
+    let list = []
+    sku_card_list.value.forEach(o=>{
+      if(o.goodsSkusCardValue&&o.goodsSkusCardValue.length>0){
+        list.push(o.goodsSkusCardValue)
+      }
+    })
+
+    if(list.length == 0){
+      return []
+    }
+
+    let arr = cartesianProductOf(...list)
+
+    //获取之前的规格列表，将规格ID排序之后转化成字符串
+    let beforeSkuList = JSON.parse(JSON.stringify(sku_list.value)).map(o=>{
+      if(!Array.isArray(o.skus)){
+        o.skus = Object.keys(o.skus).map(k=>o.skus[k])
+      }
+      o.skusId = o.skus.sort((a,b)=>a.id-b.id).map(s=>s.id).join(",")
+      return o
+    })
+
+    sku_list.value = []
+    sku_list.value = arr.map(skus=>{
+      let o = getBeforeSkuItem(JSON.parse(JSON.stringify(skus)),beforeSkuList)
+      return {
+        code:o?.code || "",
+        cprice:o?.cprice||"0.00",
+        goods_id:goodsId.value,
+        image:o?.image||"",
+        oprice:o?.oprice||"0.00",
+        pprice:o?.pprice||"0.00",
+        skus,
+        stock:o?.stock||0,
+        volume:o?.volume||0,
+        weight:o?.weight||0
+      }
+    })
+  }, 200);
+}
+
+function getBeforeSkuItem(skus,beforSkuList){
+  let skusId = skus.sort((a,b)=>a.id-b.id).map(s=>s.id).join(",")
+  return beforSkuList.find(o=>{
+    if(skus.length > o.skus.length){
+      return skusId.indexOf(o.skusId) != -1
+    }
+    return o.skusId.indexOf(skusId) != -1
+  })
 }
