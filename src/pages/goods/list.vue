@@ -33,7 +33,11 @@
                 
                 <el-button size="small" type="danger" @click="handleMultiDelete" v-if="searchForm.tab!='delete'">批量删除</el-button>  
                 <el-button size="small" type="warning" @click="handleRestoreGoods" v-else >恢复商品</el-button>  
-
+                <el-popconfirm v-if="searchForm.tab =='delete'" title="是否彻底删除该商品" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDestroyGoods">
+                    <template #reference>
+                        <el-button size="small" type="danger" >彻底删除</el-button>
+                    </template>
+                </el-popconfirm>
                 <el-button size="small" @click="handleMultiStatusChange(1)" v-if="searchForm.tab=='all'||searchForm.tab=='off'">上架</el-button>   
                 <el-button size="small" @click="handleMultiStatusChange(0)" v-if="searchForm.tab == 'all'||searchForm.tab=='saling'">下架</el-button>    
             </ListHeader>
@@ -103,7 +107,7 @@
             <FormDrawer ref="formDrawerRef" :title="drawerTitle" @submit="handleSubmit">
                 <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
                     <el-form-item label="商品名称" prop="title">
-                        <el-input v-model="form.title" placeholder="请输入商品名称，不能超过60字符"></el-input>
+                        <el-input v-model="form.title" placeholder="请输入商品名称,不能超过60字符"></el-input>
                     </el-form-item>
                     <el-form-item label="封面" prop="cover">
                         <ChooseImage v-model="form.cover"/>
@@ -176,7 +180,8 @@ import {
     createGoods,
     deleteGoods,
     updateGoods,
-    restoreGoods
+    restoreGoods,
+    destroyGoods
 } from "~/api/goods"
 import ListHeader from "~/components/ListHeader.vue"
 import FormDrawer from "~/components/FormDrawer.vue"
@@ -300,11 +305,15 @@ const handleSetGoodsSkus = (row)=>{
     skusRef.value.open(row)
 }
 
-const handleRestoreGoods = ()=>{
+const handleRestoreGoods = () => useMultiAction(restoreGoods,"恢复")
+
+const handleDestroyGoods = () => useMultiAction(destroyGoods,"彻底删除")
+
+function useMultiAction(func,msg){
     loading.value = true
-    restoreGoods(multiSelectionIds.value)
+    func(multiSelectionIds.value)
     .then(res=>{
-        toast("恢复成功")
+        toast(msg+"成功")
         if(multipleTableRef.value){
             multipleTableRef.value.clearSelection()
         }

@@ -34,6 +34,12 @@ export function restoreGoods(ids){
     })
 }
 
+export function destroyGoods(ids){
+    return axios.post(`/admin/goods/destroy`,{
+        ids
+    })
+}
+
 export function readGoods(id){
     return axios.get(`/admin/goods/read/${id}`)
 }
