@@ -28,6 +28,12 @@ export function deleteGoods(ids){
     })
 }
 
+export function restoreGoods(ids){
+    return axios.post(`/admin/goods/restore`,{
+        ids
+    })
+}
+
 export function readGoods(id){
     return axios.get(`/admin/goods/read/${id}`)
 }

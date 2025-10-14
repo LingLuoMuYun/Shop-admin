@@ -29,7 +29,11 @@
                 </template>
             </Search> 
             <!-- 新增，刷新 -->
-            <ListHeader layout="create,delete,refresh" @create="handleCreate" @refresh="getData" @delete="handleMultiDelete">
+            <ListHeader layout="create,refresh" @create="handleCreate" @refresh="getData">
+                
+                <el-button size="small" type="danger" @click="handleMultiDelete" v-if="searchForm.tab!='delete'">批量删除</el-button>  
+                <el-button size="small" type="warning" @click="handleRestoreGoods" v-else >恢复商品</el-button>  
+
                 <el-button size="small" @click="handleMultiStatusChange(1)" v-if="searchForm.tab=='all'||searchForm.tab=='off'">上架</el-button>   
                 <el-button size="small" @click="handleMultiStatusChange(0)" v-if="searchForm.tab == 'all'||searchForm.tab=='saling'">下架</el-button>    
             </ListHeader>
@@ -82,7 +86,7 @@
                             <el-button class="px-1"  :type="!scope.row.content ? 'danger' :'primary'" @click="handleSetGoodsContent(scope.row)" 
                             :loading="scope.row.contentLoading" size="small" text>商品详情</el-button>
 
-                            <el-popconfirm title="是否删除该商品" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(scope.row.id)">
+                            <el-popconfirm title="是否删除该商品" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete([scope.row.id])">
                                 <template #reference>
                                     <el-button  text type="primary" size="small" >删除</el-button>
                                 </template>
@@ -171,7 +175,8 @@ import {
     updateGoodsStatus,
     createGoods,
     deleteGoods,
-    updateGoods
+    updateGoods,
+    restoreGoods
 } from "~/api/goods"
 import ListHeader from "~/components/ListHeader.vue"
 import FormDrawer from "~/components/FormDrawer.vue"
@@ -185,6 +190,9 @@ import SearchItem from "~/components/SearchItem.vue"
 import banners from "./banners.vue"
 import content from "./content.vue"
 import skus from "./skus.vue"
+import {
+    toast
+} from "~/composables/util"
 
 const {
     handleSelectionChange,
@@ -199,7 +207,8 @@ const {
     limit,
     getData,
     handleDelete,
-    handleMultiStatusChange
+    handleMultiStatusChange,
+    multiSelectionIds
 } = useInitTable({
     searchForm:{
         title:"",
@@ -289,5 +298,20 @@ const handleSetGoodsContent = (row)=>{
 const skusRef = ref(null)
 const handleSetGoodsSkus = (row)=>{
     skusRef.value.open(row)
+}
+
+const handleRestoreGoods = ()=>{
+    loading.value = true
+    restoreGoods(multiSelectionIds.value)
+    .then(res=>{
+        toast("恢复成功")
+        if(multipleTableRef.value){
+            multipleTableRef.value.clearSelection()
+        }
+        getData()
+    })
+    .finally(()=>{
+        loading.value = false
+    })
 }
 </script>
