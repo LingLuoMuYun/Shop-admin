@@ -9,7 +9,7 @@
                     <span>{{ data.name }}</span>
 
                     <div class="ml-auto">
-                        <el-button text type="primary" size="small">推荐商品</el-button>
+                        <el-button text type="primary" size="small" @click="openGoodsDrawer(data)">推荐商品</el-button>
                         <el-switch :modelValue="data.status" :active-value="1" :inactive-value="0" @change="handleStatusChange($event,data)"/>
                             <el-button text type="primary" size="small" @click.stop="handleEdit(data)">修改</el-button>
                             <el-popconfirm title="是否要删除该记录" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(data.id)">
@@ -33,13 +33,16 @@
             </el-form>
         </FormDrawer>
 
+        <GoodsDrawer ref="GoodsDrawerRef"/>
     </el-card>
     
 </template>
 
 <script setup>
+import { ref } from "vue"
 import ListHeader from "~/components/ListHeader.vue"
 import FormDrawer from "~/components/FormDrawer.vue"
+import GoodsDrawer from "./components/GoodsDrawer.vue"
 import {
     getCategoryList,
     createCategory,
@@ -96,6 +99,10 @@ const {
     update:updateCategory,
     create:createCategory
 })
+
+const GoodsDrawerRef = ref(null)
+const openGoodsDrawer = (data)=>GoodsDrawerRef.value.open(data)
+
 
 </script>
 
