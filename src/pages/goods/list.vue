@@ -41,6 +41,7 @@
                 <el-button size="small" @click="handleMultiStatusChange(1)" v-if="searchForm.tab=='all'||searchForm.tab=='off'">上架</el-button>   
                 <el-button size="small" @click="handleMultiStatusChange(0)" v-if="searchForm.tab == 'all'||searchForm.tab=='saling'">下架</el-button>    
             </ListHeader>
+
             <el-table ref="multipleTableRef" @selection-change="handleSelectionChange" :data="tableData" stripe style="width:100%" v-loading="loading">
                 <el-table-column type="selection" width="55"/>
                 <el-table-column label="商品" width="300">
@@ -100,6 +101,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            
             <div class="flex items-center justify-center mt-5">
                 <el-pagination background layout="prev,pager,next" :total="total" :current-page="currentPage" :page-size="limit" @current-change="getData" />
             </div>

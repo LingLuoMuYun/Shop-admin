@@ -1,5 +1,5 @@
 <template>
-    <FormDrawer ref="formDrawerRef" title="推荐商品">
+    <FormDrawer ref="formDrawerRef" title="推荐商品" @submit="handleConnect" confirmText="关联">
         <el-table :data="tableData" border stripe style="width:100%;">
             <el-table-column prop="goods_id" label="ID" width="60" />
             <el-table-column label="商品封面" width="180" >
@@ -20,17 +20,20 @@
         </el-table>
         
     </FormDrawer>
+    <ChooseGoods ref="ChooseGoodsRef"/>
 </template>
 
 <script setup>
 import { ref } from "vue"
 import FormDrawer from "~/components/FormDrawer.vue"
+import ChooseGoods from "~/components/ChooseGoods.vue"
 import {
     toast
 } from "~/composables/util"
 import {
     getCategoryGoods,
-    deleteCategoryGoods
+    deleteCategoryGoods,
+    connectCategoryGoods
 } from "~/api/category.js"
 
 const formDrawerRef = ref(null)
@@ -67,6 +70,22 @@ const handleDelete = (row)=>{
     })
 }
 
+const ChooseGoodsRef = ref(null)
+const handleConnect = ()=>{
+    ChooseGoodsRef.value.open((goods_ids)=>{
+        formDrawerRef.value.showLoading()
+        connectCategoryGoods({
+            category_id:category_id.value,
+            goods_ids
+        }).then(res=>{
+            getData()
+            toast("关联成功")
+        })
+        .finally(()=>{
+            formDrawerRef.value.hideLoading()
+        })
+    })
+}
 defineExpose({
     open
 })
