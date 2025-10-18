@@ -9,7 +9,7 @@
                     <span>{{ data.name }}</span>
 
                     <div class="ml-auto">
-                        <el-button text type="primary" size="small" @click="openGoodsDrawer(data)">推荐商品</el-button>
+                        <el-button text type="primary" size="small" @click="openGoodsDrawer(data)" :loading="data.goodsDrawerLoading">推荐商品</el-button>
                         <el-switch :modelValue="data.status" :active-value="1" :inactive-value="0" @change="handleStatusChange($event,data)"/>
                             <el-button text type="primary" size="small" @click.stop="handleEdit(data)">修改</el-button>
                             <el-popconfirm title="是否要删除该记录" confirmButtonText="确认" cancelButtonText="取消" @confirm="handleDelete(data.id)">
@@ -64,7 +64,10 @@ const {
 } = useInitTable({
     getList:getCategoryList,
     onGetListSuccess:(res)=>{
-        tableData.value = res
+        tableData.value = res.map(o=>{
+            o.goodsDrawerLoading = false
+            return o
+        })
     },
     delete:deleteCategory,
     updateStatus:updateCategoryStatus
