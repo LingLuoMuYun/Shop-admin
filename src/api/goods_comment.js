@@ -10,3 +10,7 @@ export function getGoodsCommentList(page,query = {}){
 export function updateGoodsCommentStatus(id,status){
     return axios.post(`/admin/goods_comment/${id}/update_status`,{status})
 }
+
+export function reviewGoodsComment(id,data){
+    return axios.post(`/admin/goods_comment/${id}`,{data})
+}
