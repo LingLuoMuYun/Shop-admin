@@ -9,6 +9,34 @@
         </Search>
         
          <el-table :data="tableData" stripe style="width:100%" v-loading="loading">
+
+            <el-table-column type="expand">
+                <template #default="{row}">
+                    <div class="flex pl-16">
+                        <el-avatar  :src="row.user?.avatar" fit="fill" class="mr-3"></el-avatar>
+                        <div class="flex-1">
+                            <h6 class="flex items-center">
+                                {{ row.user?.nickname||row.user?.username }}
+                                <small class="text-gray-400 ml-2">{{ row.review_time }}</small>
+                                <el-button size="small" class="ml-auto">回复</el-button>
+                            </h6>
+                            {{ row.review.data }}
+                            <div class="py-2">
+                                <el-image v-for="(item,index) in row.review.image" :key="index" :src="item" 
+                                fit="cover" :lazy="true" style="width: 100px;height: 100px;" class="rounded"></el-image>
+                            </div>
+                            <div class="mt-3 bg-gray-100 p-3 rounded" v-for="(item,index) in row.extra" :key="index">
+                                <h6 class="flex font-bold">
+                                    客服
+                                    <el-button type="info" size="small" class="ml-auto">修改</el-button>
+                                </h6>
+                                <p>{{ item.data }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </el-table-column>
+
             <el-table-column label="ID" width="70" align="center" prop="id"></el-table-column>
             <el-table-column label="商品" width="200">
                 <template #default="{row}">
@@ -23,7 +51,7 @@
             <el-table-column label="评价信息" width="200">
                 <template #default="{row}">
                     <div>
-                        <p>用户:{{ row.user.nickname || row.user.username }}</p>    
+                        <p>用户:{{ row.user?.nickname || row.user?.username }}</p>    
                         <p>
                             <el-rate v-model="row.rating" disabled show-score text-color="#ff9900"/>  
                         </p>
@@ -60,7 +88,6 @@ import Search from "~/components/Search.vue"
 import SearchItem from "~/components/SearchItem.vue"
 
 
-const roles = ref([]);
 
 const {
     searchForm,
@@ -75,7 +102,7 @@ const {
     handleStatusChange
 } = useInitTable({
     searchForm:{
-        keyword:""
+        title:""
     }, 
     getList:getGoodsCommentList,
     onGetListSuccess:(res)=>{
@@ -84,7 +111,6 @@ const {
             return o;
         });
         total.value = res.totalCount;
-        roles.value = res.roles;
     },
     updateStatus:updateGoodsCommentStatus
 })
