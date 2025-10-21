@@ -26,7 +26,7 @@
                 </template>
             </Search> 
 
-            <ListHeader layout="" >
+            <ListHeader layout="refresh,download" @refresh="getData" @download="handleExportExcel" >
                 <el-button size="small" type="danger" @click="handleMultiDelete">批量删除</el-button>  
             </ListHeader>
 
@@ -94,6 +94,8 @@
                 <el-pagination background layout="prev,pager,next" :total="total" :current-page="currentPage" :page-size="limit" @current-change="getData" />
             </div>
         </el-card>
+
+        <ExportExcel :tabs="tabbars" ref="ExportExcelRef"/>
     </div>  
 </template>
  
@@ -107,9 +109,7 @@ import ListHeader from "~/components/ListHeader.vue"
 import { useInitTable } from "~/composables/useCommon" 
 import Search from "~/components/Search.vue"
 import SearchItem from "~/components/SearchItem.vue"
-import {
-    toast
-} from "~/composables/util"
+import ExportExcel from "./ExportExcel.vue"
 
 const {
     handleSelectionChange,
@@ -175,6 +175,9 @@ const tabbars = [{
     name:"退款中"
 },]
 
-
+const ExportExcelRef = ref(null)
+const handleExportExcel = ()=>{
+    ExportExcelRef.value.open()
+}
 
 </script>
