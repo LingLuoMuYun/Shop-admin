@@ -25,7 +25,8 @@
 
 <script setup>
 import { ref,reactive } from "vue"
-
+import { exportOrder } from "~/api/order"
+import { toast } from "~/composables/util"
 defineProps({
     tabs:Array
 })
@@ -40,7 +41,31 @@ const form = reactive({
 
 const loading = ref(false)
 const onSubmit = ()=>{
-
+    if(!form.tab) return toDarkStyle("订单类型不能为空","error")
+    loading.value = true
+    let starttime = null
+    let endtime = null
+    if(form.time && Array.isArray(form.time)){
+        starttime = form.time[0]
+        endtime = form.time[1]
+    }
+    exportOrder({
+        tab:form.tab,
+        starttime,
+        endtime
+    }).then(data=>{
+        let url = window.URL.createObjectURL(new Blob([ data ]))
+        let link = document.createElement("a")
+        link.style.display = "none"
+        link.href = url
+        let filename = (new Date()).getTime()+".xlsx"
+        link.setAttribute("download",filename)
+        document.body.appendChild(link)
+        link.click()
+        close()
+    }).finally(()=>{
+        loading.value = false
+    })
 }
 
 defineExpose({
