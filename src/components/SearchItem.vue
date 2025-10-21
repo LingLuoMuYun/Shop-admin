@@ -1,13 +1,17 @@
 <template>
   <el-col :span="8" :offset="0">
-    <el-form-item label="关键词">
-     <slot/>
+    <!-- ✅ 绑定 label 属性 -->
+    <el-form-item :label="label">
+      <slot />
     </el-form-item>
   </el-col>
 </template>
 
 <script setup>
-    defineProps({
-        label:String
-    })
+defineProps({
+  label: {
+    type: String,
+    default: ''
+  }
+})
 </script>
