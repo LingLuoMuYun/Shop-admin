@@ -81,8 +81,8 @@
                     </template>
                 </el-table-column>
                 <el-table-column  label="操作"  align="center">
-                    <template #default="scope">
-                        <el-button class="px-1" type="primary" size="small" text>订单详情</el-button> 
+                    <template #default="{row}">
+                        <el-button class="px-1" type="primary" size="small" text @click="openInfoModel(row)">订单详情</el-button> 
                         <el-button v-if="searchForm.tab == 'noship'" class="px-1" type="primary" size="small" text>订单发货</el-button> 
                         <el-button v-if="searchForm.tab == 'refunding'" class="px-1" type="primary" size="small" text>同意退款</el-button> 
                         <el-button v-if="searchForm.tab == 'refunding'" class="px-1" type="primary" size="small" text>拒绝退款</el-button> 
@@ -96,6 +96,8 @@
         </el-card>
 
         <ExportExcel :tabs="tabbars" ref="ExportExcelRef"/>
+
+        <InfotModel ref="InfoModelRef" :info="info"/>
     </div>  
 </template>
  
@@ -105,6 +107,7 @@ import {
     getOrderList,
     deleteOrder
 } from "~/api/order"
+import InfotModel from "./InfoModel.vue"
 import ListHeader from "~/components/ListHeader.vue"
 import { useInitTable } from "~/composables/useCommon" 
 import Search from "~/components/Search.vue"
@@ -180,4 +183,20 @@ const handleExportExcel = ()=>{
     ExportExcelRef.value.open()
 }
 
+const info = ref(null)
+const InfoModelRef = ref(null)
+const openInfoModel = (row)=>{
+    row.order_items = row.order_items.map(o=>{
+        if(o.skus_type==1&&o.goods_skus){
+            let s = []
+            for(const k in o.goods_skus.skus){
+                s.push(o.goods_skus.skus[k].value)
+            }
+            o.sku = s.join(",")
+        }
+        return o
+    })
+    info.value = row
+    InfoModelRef.value.open()
+}
 </script>
