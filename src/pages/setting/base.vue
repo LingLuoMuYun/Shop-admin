@@ -78,6 +78,7 @@
 
 <script setup>
 import { ref,reactive } from "vue"
+import { toast } from "~/composables/util"
 import { 
     getSysconfig,
     setSysconfig
@@ -121,7 +122,7 @@ const submit = ()=>{
         ...form,
         password_encrypt:form.password_encrypt.join(",")
     }).then(res=>{
-        toDisplayString("修改成功")
+        toast("修改成功")
         getData()
     }).finally(()=>{
         loading.value = false
