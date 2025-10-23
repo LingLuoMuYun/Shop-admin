@@ -23,6 +23,7 @@ import RoleList from '~/pages/role/list.vue'
 import SkusList from '~/pages/skus/list.vue'
 import LevelList from '~/pages/level/list.vue'
 import SettingBuy from '~/pages/setting/buy.vue'
+import SettingShip from '~/pages/setting/ship.vue'
 
 // const routes = [ {
 //     path:"/",
@@ -192,6 +193,13 @@ const asyncRoutes =[{
         component:SettingBuy,
         meta:{
             title:"支付设置"
+        }
+    },{
+        path:"/setting/ship",
+        name:"/setting/ship",
+        component:SettingShip,
+        meta:{
+            title:"物流设置"
         }
     }]
 
